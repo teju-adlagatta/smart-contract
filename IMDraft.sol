@@ -46,9 +46,7 @@ contract CompanyFunds is ERC20 {
     }
 
       
-    function _mintToken() public payable {
-        _burn(msg.sender , 10000000);
-    }
+   
 
     function convertEthToTokens() public payable onlyCompanyAdmin {
     uint256 ethAmount = msg.value; // Amount sent in the transaction
