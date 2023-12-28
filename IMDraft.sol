@@ -46,7 +46,7 @@ contract CompanyFunds is ERC20 {
     }
 
       
-   
+    
 
     function convertEthToTokens() public payable onlyCompanyAdmin {
     uint256 ethAmount = msg.value; // Amount sent in the transaction
@@ -57,7 +57,7 @@ contract CompanyFunds is ERC20 {
 
     // Transfer ERC20 tokens to the contract
     // tokenContract.transferFrom(companyAccount, address(this), tokens);
-     _mint(msg.sender , msg.value);
+     _mint(msg.sender , tokens );
 
     // Update company balance
     //departments[companyAccount].balance += tokens;
@@ -66,24 +66,26 @@ contract CompanyFunds is ERC20 {
 
 
 
-
-
      function transferToDepartment(address _department, uint256 _amount) external onlyCompanyAdmin {
         require(departments[companyAccount].balance >= _amount, "Insufficient balance");
-        departments[companyAccount].balance -= _amount;
-        departments[_department].balance += _amount;
+       transfer( _department,  _amount);
+       
     }
+
+    function transfer(address from, address to,uint256 value) external {
+        _transfer(from, to, value);
+    }
+
+    
 
     function requestFunds( uint256 _amount) external {
         require(departments[msg.sender].balance >= _amount, "Insufficient balance");
         departments[msg.sender].requests[_amount] = true;
     }
 
-    function approveRequest(address _department, uint256 _amount) external onlyDepartmentAdmin(_department) {
+    function approveRequest(address _department, uint256 _amount ) external onlyDepartmentAdmin(_department) {
         require(departments[_department].requests[_amount], "No such request");
-        departments[_department].requests[_amount] = false;
-        departments[_department].balance -= _amount;
-        payable(_department).transfer(_amount);
+        _approve(msg.sender, _department, _amount);
     }
 
     // View functions to check balances
@@ -98,3 +100,7 @@ contract CompanyFunds is ERC20 {
 
    
 }
+
+   
+   
+  
