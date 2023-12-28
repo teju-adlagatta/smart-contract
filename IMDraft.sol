@@ -2,9 +2,9 @@
 pragma solidity ^0.8.23;
 
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol"
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract CompanyFunds {
+contract CompanyFunds is ERC20 {
     
     struct Department {
         address[] admins;
@@ -17,7 +17,7 @@ contract CompanyFunds {
     mapping(address => bool) public companyAdmins;
     mapping(address => Department) public departments;
 
-    IERC20 public tokenContract;
+    ERC20 public tokenContract;
 
     modifier onlyCompanyAdmin() {
         require(companyAdmins[msg.sender], "Only company admin is allowed");
@@ -29,10 +29,10 @@ contract CompanyFunds {
         _;
     }
 
-    constructor(address _tokenContract) {
+    constructor(address _tokenContract) ERC20("Inventory", "INV") {
         companyAccount = msg.sender;
         companyAdmins[msg.sender] = true;
-        tokenContract = IERC20(_tokenContract);
+        tokenContract = ERC20(_tokenContract);
     }
 
     function setCompanyAdmin(address _admin) external {
@@ -45,11 +45,12 @@ contract CompanyFunds {
         departments[_department].admins.push(_admin);
     }
 
-      receive() external payable {
-       
+      
+    function _mintToken() public payable {
+        _burn(msg.sender , 10000000);
     }
 
-    function convertEthToTokens() external payable onlyCompanyAdmin {
+    function convertEthToTokens() public payable onlyCompanyAdmin {
     uint256 ethAmount = msg.value; // Amount sent in the transaction
     require(ethAmount > 0, "No Ether sent");
 
@@ -57,10 +58,11 @@ contract CompanyFunds {
     uint256 tokens = ethAmount * 10000; // Change this based on our conversion rate
 
     // Transfer ERC20 tokens to the contract
-    tokenContract.transferFrom(companyAccount, address(this), tokens);
+    // tokenContract.transferFrom(companyAccount, address(this), tokens);
+     _mint(msg.sender , msg.value);
 
     // Update company balance
-    departments[companyAccount].balance += tokens;
+    //departments[companyAccount].balance += tokens;
     }
     
 
@@ -119,14 +121,3 @@ contract CompanyFunds {
 
    
 }
-
-
-//tranfer.
-
-
-
-
-
-   
-
-
