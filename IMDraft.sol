@@ -64,27 +64,6 @@ contract CompanyFunds is ERC20 {
     }
     
 
- /*   function convertEthToTokens(uint256 ethAmount) external payable onlyCompanyAdmin returns (uint256 tokens) {
-    ethAmount = msg.value; // Amount sent in the transaction
-    require(ethAmount > 0, "No Ether sent");
-
-    // Determine the conversion rate (for example, 1 ETH = 10000 tokens)
-     tokens = ethAmount * 10000; // Change this based on your conversion rate
-
-    // Ensure the CompanyFunds contract is approved to spend tokens from the company account
-    require(
-        tokenContract.allowance(companyAccount, address(this)) >= tokens,
-        "Insufficient allowance"
-    );
-
-    // Transfer ERC20 tokens to the contract
-    tokenContract.transferFrom(companyAccount, address(this), tokens);
-
-    // Update company balance
-    departments[companyAccount].balance += tokens;
-
-    
-}*/
 
 
 
