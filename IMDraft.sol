@@ -72,7 +72,7 @@ contract CompanyFunds is ERC20 {
        
     }
 
-    function transfer(address from, address to,uint256 value) external {
+    function transfer_(address from, address to,uint256 value) external {
         _transfer(from, to, value);
     }
 
